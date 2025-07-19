@@ -25,10 +25,11 @@ A comprehensive business application built with React + Vite + TypeScript, featu
 ### Project Setup
 
 1. **Clone the repository using GitHub Desktop:**
-   - Open GitHub Desktop
-   - Click "Clone a repository from the Internet"
-   - Enter the repository URL
-   - Choose your local folder
+   - Click "Use Template" and create your own repo
+   - Click "Code" --> "Open in Github desktop"
+   - Download to a local folder
+   - Open the same directory in Goose
+   - Ask Goose to run setup steps
 
 2. **Install dependencies and run:**
    ```bash
