@@ -17,7 +17,7 @@ A comprehensive business application built with React + Vite + TypeScript, featu
 - Sign in with your GitHub account
 
 #### 3. Install Goose AI Assistant
-- **Direct Download**: Visit [Goose Releases](https://github.com/block/goose/releases) and download for your OS
+- **Direct Download**: Visit [Goose Releases](https://block.github.io/goose/) and download for your OS
 - **Or via pip**: `pip install goose-ai`
 - **Or via Homebrew**: `brew install goose-ai`
 - Verify: `goose --version`
