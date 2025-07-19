@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Search, 
   Home, 
@@ -43,7 +44,7 @@ const mainNavItems: NavItem[] = [
     icon: Package, 
     hasSubmenu: true,
     submenuItems: [
-      { id: 'items-main', label: 'Items', hasSubmenu: true },
+      { id: 'items-main', label: 'Items' },
       { id: 'item-library', label: 'Item library' },
       { id: 'channel-listings', label: 'Channel listings' },
       { id: 'service-library', label: 'Service library' },
@@ -73,6 +74,8 @@ export function LeftNav() {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [expandedSubmenuItems, setExpandedSubmenuItems] = useState<string[]>(['items-main']);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleMainItemClick = (item: NavItem) => {
     if (item.hasSubmenu) {
@@ -82,6 +85,24 @@ export function LeftNav() {
     } else {
       setActiveItem(item.id);
       setIsSubmenuOpen(false);
+      
+      // Navigate to routes for main items
+      if (item.id === 'home') {
+        navigate('/');
+      }
+    }
+  };
+
+  const handleSubmenuItemClick = (subItem: SubMenuItem) => {
+    if (subItem.hasSubmenu) {
+      toggleSubmenuItem(subItem.id);
+    } else {
+      // Navigate to specific routes based on submenu items
+      if (subItem.id === 'items-main') {
+        navigate('/items');
+        // Close submenu after navigation
+        setIsSubmenuOpen(false);
+      }
     }
   };
 
@@ -126,7 +147,16 @@ export function LeftNav() {
           <div className="py-2 h-full overflow-y-auto">
             {mainNavItems.map((item) => {
               const Icon = item.icon;
-              const isActive = activeItem === item.id || (item.id === 'items' && activeItem === 'items') || (item.id === 'online');
+              // Determine if item is active based on current route and navigation state
+              let isActive = false;
+              
+              if (item.id === 'home') {
+                isActive = location.pathname === '/';
+              } else if (item.id === 'items') {
+                isActive = location.pathname === '/items' || activeItem === 'items';
+              } else {
+                isActive = activeItem === item.id;
+              }
               
               return (
                 <button
@@ -174,7 +204,7 @@ export function LeftNav() {
                 {activeNavItem.submenuItems?.map((subItem) => (
                   <div key={subItem.id}>
                     <button
-                      onClick={() => subItem.hasSubmenu ? toggleSubmenuItem(subItem.id) : undefined}
+                      onClick={() => handleSubmenuItemClick(subItem)}
                       className={cn(
                         "w-full flex items-center justify-between px-4 py-2.5 text-left transition-colors font-normal",
                         subItem.id === 'items-main' 

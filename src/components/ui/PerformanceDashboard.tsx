@@ -1,11 +1,24 @@
 import React from "react";
+import { DashboardData } from '../types/dashboard';
 import { Icon1 } from "./icons/Icon1";
 import { Icon2 } from "./icons/Icon2";
 import { Icon3 } from "./icons/Icon3";
 import { Icon4 } from "./icons/Icon4";
 import { Icon5 } from "./icons/Icon5";
 
-export function PerformanceDashboard() {
+interface PerformanceDashboardProps {
+  data?: DashboardData | null;
+}
+
+export function PerformanceDashboard({ data }: PerformanceDashboardProps) {
+  // Default fallback data
+  const selectedDate = data?.selectedDate || 'Jul 18';
+  const keyMetrics = data?.keyMetrics || [];
+  const customerStats = data?.customerStats;
+  const paymentTypes = data?.paymentTypes || [];
+
+  // Helper function to get metric by id
+  const getMetric = (id: string) => keyMetrics.find(metric => metric.id === id);
   return (
     <>
       <style>{`
@@ -132,7 +145,7 @@ export function PerformanceDashboard() {
                   Date
                 </label>
                 <span style={{ fontSize: "14px", fontWeight: "500" }}>
-                  Jul 18
+                  {selectedDate}
                 </span>
               </div>
             </div>
@@ -192,320 +205,91 @@ export function PerformanceDashboard() {
                   gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
                 }}
               >
-                <a
-                  href="/dashboard/sales/reports/sales-summary"
-                  style={{
-                    marginLeft: "-8px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderRadius: "6px",
-                    padding: "12px 8px 12px 8px",
-                    transition: "background-color 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.02)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <div style={{ display: "flex", height: "22px" }}>
-                      <p style={{ marginBottom: "0px" }}>Net Sales</p>
-                    </div>
-                    <div
-                      style={{
-                        color: "rgba(0, 0, 0, 0.9)",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      $0.00
-                    </div>
-                  </div>
-                  <div style={{ minHeight: "28px" }}>
-                    <div
-                      style={{
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        lineHeight: "22px",
-                        letterSpacing: "normal",
-                        textTransform: "none",
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        color: "rgba(0, 0, 0, 0.3)",
-                        border: "1px solid rgba(0, 0, 0, 0)",
-                        borderRadius: "6px",
-                        padding: "2px 8px 2px 8px",
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                      }}
-                    >
-                      <Icon1 style={{}} />
-                      N/A
-                    </div>
-                  </div>
-                </a>
+                {keyMetrics.map((metric, index) => {
+                  const icons = [Icon1, Icon2, Icon3, Icon4, Icon5];
+                  const IconComponent = icons[index] || Icon1;
+                  
+                  // Helper function to get change color
+                  const getChangeColor = (changeType: string | undefined, change: string | undefined) => {
+                    if (!change || change === 'N/A') return 'rgba(0, 0, 0, 0.3)';
+                    if (changeType === 'positive') return 'rgb(0, 156, 74)';
+                    if (changeType === 'negative') return 'rgb(199, 55, 55)';
+                    return 'rgba(0, 0, 0, 0.55)';
+                  };
 
-                <a
-                  href="/dashboard/sales/reports/sales-summary"
-                  style={{
-                    marginLeft: "-8px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderRadius: "6px",
-                    padding: "12px 8px 12px 8px",
-                    transition: "background-color 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.02)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <div style={{ display: "flex", height: "22px" }}>
-                      <p style={{ marginBottom: "0px" }}>Gross Sales</p>
-                    </div>
-                    <div
-                      style={{
-                        color: "rgba(0, 0, 0, 0.9)",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      $0.00
-                    </div>
-                  </div>
-                  <div style={{ minHeight: "28px" }}>
-                    <div
-                      style={{
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        lineHeight: "22px",
-                        letterSpacing: "normal",
-                        textTransform: "none",
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        color: "rgba(0, 0, 0, 0.3)",
-                        border: "1px solid rgba(0, 0, 0, 0)",
-                        borderRadius: "6px",
-                        padding: "2px 8px 2px 8px",
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                      }}
-                    >
-                      <Icon2 style={{}} />
-                      N/A
-                    </div>
-                  </div>
-                </a>
+                  const getChangeBgColor = (changeType: string | undefined, change: string | undefined) => {
+                    if (!change || change === 'N/A') return 'rgba(0, 0, 0, 0.05)';
+                    if (changeType === 'positive') return 'rgba(0, 156, 74, 0.1)';
+                    if (changeType === 'negative') return 'rgba(199, 55, 55, 0.1)';
+                    return 'rgba(0, 0, 0, 0.05)';
+                  };
 
-                <a
-                  href="/dashboard/sales/transactions"
-                  style={{
-                    marginLeft: "-8px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderRadius: "6px",
-                    padding: "12px 8px 12px 8px",
-                    transition: "background-color 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.02)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <div style={{ display: "flex", height: "22px" }}>
-                      <p style={{ marginBottom: "0px" }}>Transactions</p>
-                    </div>
-                    <div
+                  return (
+                    <a
+                      key={metric.id}
+                      href={metric.href || "#"}
                       style={{
-                        color: "rgba(0, 0, 0, 0.9)",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      0
-                    </div>
-                  </div>
-                  <div style={{ minHeight: "28px" }}>
-                    <div
-                      style={{
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        lineHeight: "22px",
-                        letterSpacing: "normal",
-                        textTransform: "none",
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        color: "rgba(0, 0, 0, 0.3)",
-                        border: "1px solid rgba(0, 0, 0, 0)",
-                        borderRadius: "6px",
-                        padding: "2px 8px 2px 8px",
-                        textDecoration: "none",
+                        marginLeft: "-8px",
                         display: "flex",
+                        justifyContent: "space-between",
                         alignItems: "center",
-                        gap: "4px",
-                      }}
-                    >
-                      <Icon3 style={{}} />
-                      N/A
-                    </div>
-                  </div>
-                </a>
-
-                <a
-                  href="/dashboard/sales/reports/sales-summary"
-                  style={{
-                    marginLeft: "-8px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderRadius: "6px",
-                    padding: "12px 8px 12px 8px",
-                    transition: "background-color 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.02)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <div style={{ display: "flex", height: "22px" }}>
-                      <p style={{ marginBottom: "0px" }}>Average Net Sale</p>
-                    </div>
-                    <div
-                      style={{
-                        color: "rgba(0, 0, 0, 0.9)",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      $0.00
-                    </div>
-                  </div>
-                  <div style={{ minHeight: "28px" }}>
-                    <div
-                      style={{
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        lineHeight: "22px",
-                        letterSpacing: "normal",
-                        textTransform: "none",
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        color: "rgba(0, 0, 0, 0.3)",
-                        border: "1px solid rgba(0, 0, 0, 0)",
                         borderRadius: "6px",
-                        padding: "2px 8px 2px 8px",
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
+                        padding: "12px 8px 12px 8px",
+                        transition: "background-color 0.2s",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.02)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = "transparent";
                       }}
                     >
-                      <Icon4 style={{}} />
-                      N/A
-                    </div>
-                  </div>
-                </a>
-
-                <a
-                  href="/dashboard/sales/transactions"
-                  style={{
-                    marginLeft: "-8px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderRadius: "6px",
-                    padding: "12px 8px 12px 8px",
-                    transition: "background-color 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.02)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <div style={{ display: "flex", height: "22px" }}>
-                      <p style={{ marginBottom: "0px" }}>Returns and Refunds</p>
-                    </div>
-                    <div
-                      style={{
-                        color: "rgba(0, 0, 0, 0.9)",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      $0.00
-                    </div>
-                  </div>
-                  <div style={{ minHeight: "28px" }}>
-                    <div
-                      style={{
-                        fontWeight: "600",
-                        fontSize: "14px",
-                        lineHeight: "22px",
-                        letterSpacing: "normal",
-                        textTransform: "none",
-                        backgroundColor: "rgba(0, 0, 0, 0.05)",
-                        color: "rgba(0, 0, 0, 0.3)",
-                        border: "1px solid rgba(0, 0, 0, 0)",
-                        borderRadius: "6px",
-                        padding: "2px 8px 2px 8px",
-                        textDecoration: "none",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                      }}
-                    >
-                      <Icon5 style={{}} />
-                      N/A
-                    </div>
-                  </div>
-                </a>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-around",
+                        }}
+                      >
+                        <div style={{ display: "flex", height: "22px" }}>
+                          <p style={{ marginBottom: "0px" }}>{metric.label}</p>
+                        </div>
+                        <div
+                          style={{
+                            color: "rgba(0, 0, 0, 0.9)",
+                            fontSize: "16px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          {metric.value}
+                        </div>
+                      </div>
+                      <div style={{ minHeight: "28px" }}>
+                        <div
+                          style={{
+                            fontWeight: "600",
+                            fontSize: "14px",
+                            lineHeight: "22px",
+                            letterSpacing: "normal",
+                            textTransform: "none",
+                            backgroundColor: getChangeBgColor(metric.changeType, metric.change),
+                            color: getChangeColor(metric.changeType, metric.change),
+                            border: "1px solid rgba(0, 0, 0, 0)",
+                            borderRadius: "6px",
+                            padding: "2px 8px 2px 8px",
+                            textDecoration: "none",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                          }}
+                        >
+                          <IconComponent style={{}} />
+                          {metric.change || 'N/A'}
+                        </div>
+                      </div>
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -532,23 +316,23 @@ export function PerformanceDashboard() {
             <div style={{ marginTop: "16px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", padding: "13px 8px", borderRadius: "6px" }}>
                 <span style={{ fontWeight: "500", fontSize: "14px" }}>Total customers</span>
-                <span>0</span>
+                <span>{customerStats?.totalCustomers || 0}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", padding: "13px 8px", borderRadius: "6px" }}>
                 <span style={{ fontWeight: "500", fontSize: "14px" }}>Returning customers</span>
-                <span>0</span>
+                <span>{customerStats?.returningCustomers || 0}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", padding: "13px 8px", borderRadius: "6px" }}>
                 <span style={{ fontWeight: "500", fontSize: "14px" }}>Avg. visits per customer</span>
-                <span>0</span>
+                <span>{customerStats?.avgVisitsPerCustomer || 0}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", padding: "13px 8px", borderRadius: "6px" }}>
                 <span style={{ fontWeight: "500", fontSize: "14px" }}>Avg. spent per visit</span>
-                <span>$0.00</span>
+                <span>{customerStats?.avgSpentPerVisit || '$0.00'}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", padding: "13px 8px", borderRadius: "6px" }}>
                 <span style={{ fontWeight: "500", fontSize: "14px" }}>Feedback</span>
-                <span>0 positive, 0 negative</span>
+                <span>{customerStats ? `${customerStats.positiveFeedback} positive, ${customerStats.negativeFeedback} negative` : '0 positive, 0 negative'}</span>
               </div>
             </div>
           </div>
@@ -570,36 +354,30 @@ export function PerformanceDashboard() {
             
             <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <div style={{ display: "flex", gap: "2px", marginBottom: "16px" }}>
-                <div style={{ height: "48px", flex: 1, backgroundColor: "rgb(0, 106, 255)", borderRadius: "4px" }}></div>
-                <div style={{ height: "48px", flex: 1, backgroundColor: "rgb(204, 225, 255)", borderRadius: "4px" }}></div>
-                <div style={{ height: "48px", flex: 1, backgroundColor: "rgb(229, 240, 255)", borderRadius: "4px" }}></div>
+                {paymentTypes.slice(0, 3).map((payment, index) => (
+                  <div 
+                    key={payment.id} 
+                    style={{ 
+                      height: "48px", 
+                      flex: payment.percentage > 0 ? payment.percentage : 1, 
+                      backgroundColor: payment.color, 
+                      borderRadius: "4px" 
+                    }}
+                  ></div>
+                ))}
               </div>
               
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 8px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <div style={{ width: "14px", height: "14px", backgroundColor: "rgb(0, 106, 255)", borderRadius: "20%" }}></div>
-                    <span style={{ fontWeight: "500", fontSize: "14px" }}>Card</span>
+                {paymentTypes.slice(0, 3).map((payment) => (
+                  <div key={payment.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 8px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <div style={{ width: "14px", height: "14px", backgroundColor: payment.color, borderRadius: "20%" }}></div>
+                      <span style={{ fontWeight: "500", fontSize: "14px" }}>{payment.name}</span>
+                    </div>
+                    <span>{payment.amount}</span>
+                    <span style={{ color: "rgba(0, 0, 0, 0.55)", fontSize: "14px" }}>{payment.percentage}%</span>
                   </div>
-                  <span>$0.00</span>
-                  <span style={{ color: "rgba(0, 0, 0, 0.55)", fontSize: "14px" }}>0%</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 8px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <div style={{ width: "14px", height: "14px", backgroundColor: "rgb(204, 225, 255)", borderRadius: "20%" }}></div>
-                    <span style={{ fontWeight: "500", fontSize: "14px" }}>Cash</span>
-                  </div>
-                  <span>$0.00</span>
-                  <span style={{ color: "rgba(0, 0, 0, 0.55)", fontSize: "14px" }}>0%</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 8px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <div style={{ width: "14px", height: "14px", backgroundColor: "rgb(229, 240, 255)", borderRadius: "20%" }}></div>
-                    <span style={{ fontWeight: "500", fontSize: "14px" }}>Other</span>
-                  </div>
-                  <span>$0.00</span>
-                  <span style={{ color: "rgba(0, 0, 0, 0.55)", fontSize: "14px" }}>0%</span>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -621,17 +399,24 @@ export function PerformanceDashboard() {
             
             <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
               <div style={{ display: "flex", gap: "4px", height: "80px", alignItems: "flex-end", marginBottom: "8px" }}>
-                {Array.from({ length: 11 }).map((_, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      flex: 1,
-                      height: "4px",
-                      backgroundColor: "rgba(0, 0, 0, 0.05)",
-                      borderRadius: "4px 4px 0 0",
-                    }}
-                  />
-                ))}
+                {Array.from({ length: 11 }).map((_, i) => {
+                  // Create a small random height for visualization when we have data
+                  const hasData = data?.hasItemsSales;
+                  const height = hasData ? Math.max(4, Math.random() * 60) : 4;
+                  const backgroundColor = hasData ? "rgb(0, 106, 255)" : "rgba(0, 0, 0, 0.05)";
+                  
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        flex: 1,
+                        height: `${height}px`,
+                        backgroundColor,
+                        borderRadius: "4px 4px 0 0",
+                      }}
+                    />
+                  );
+                })}
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "rgba(0, 0, 0, 0.55)" }}>
                 <span>Lowest</span>
@@ -640,7 +425,9 @@ export function PerformanceDashboard() {
             </div>
             
             <div style={{ marginTop: "16px" }}>
-              <p style={{ marginBottom: "0px" }}>No sales in this time period</p>
+              <p style={{ marginBottom: "0px" }}>
+                {data?.hasItemsSales ? "Top items are performing well" : "No sales in this time period"}
+              </p>
             </div>
           </div>
         </div>

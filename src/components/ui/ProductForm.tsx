@@ -40,22 +40,25 @@ interface ProductFormData {
 
 interface ProductFormProps {
   onSubmit?: (data: ProductFormData) => void;
+  onCancel?: () => void;
+  onSaveAsDraft?: (data: ProductFormData) => void;
+  initialData?: Partial<ProductFormData>;
   className?: string;
 }
 
-export function ProductForm({ onSubmit, className }: ProductFormProps) {
+export function ProductForm({ onSubmit, onCancel, onSaveAsDraft, initialData, className }: ProductFormProps) {
   const [formData, setFormData] = useState<ProductFormData>({
-    name: '',
-    description: '',
-    itemType: 'Physical good',
-    category: '',
-    locations: 'Tech for Product',
-    unit: 'Per item',
-    price: '',
-    sku: '',
-    gtin: '',
-    weight: '',
-    skipItemDetails: false,
+    name: initialData?.name || '',
+    description: initialData?.description || '',
+    itemType: initialData?.itemType || 'Physical good',
+    category: initialData?.category || '',
+    locations: initialData?.locations || 'Tech for Product',
+    unit: initialData?.unit || 'Per item',
+    price: initialData?.price || '',
+    sku: initialData?.sku || '',
+    gtin: initialData?.gtin || '',
+    weight: initialData?.weight || '',
+    skipItemDetails: initialData?.skipItemDetails || false,
   });
 
   const [errors, setErrors] = useState<Partial<ProductFormData>>({});
@@ -384,10 +387,22 @@ export function ProductForm({ onSubmit, className }: ProductFormProps) {
             <Button type="submit" size="lg" className="px-8">
               Save Item
             </Button>
-            <Button type="button" variant="outline" size="lg" className="px-8">
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="lg" 
+              className="px-8"
+              onClick={onCancel}
+            >
               Cancel
             </Button>
-            <Button type="button" variant="secondary" size="lg" className="px-8">
+            <Button 
+              type="button" 
+              variant="secondary" 
+              size="lg" 
+              className="px-8"
+              onClick={() => onSaveAsDraft?.(formData)}
+            >
               Save as Draft
             </Button>
           </div>

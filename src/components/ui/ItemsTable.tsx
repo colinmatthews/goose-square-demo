@@ -5,6 +5,7 @@ import { Button } from './Button';
 import { TableToolbar } from './TableToolbar';
 import { Table, TableHeader, TableBody, TableRow, TableCell, TableHeaderCell } from './Table';
 import { Checkbox } from './Checkbox';
+import { DropdownMenu } from './DropdownMenu';
 import { cn } from '../../utils/cn';
 
 interface Item {
@@ -20,12 +21,16 @@ interface ItemsTableProps {
   items?: Item[];
   onCreateItem?: () => void;
   onImportLibrary?: () => void;
+  onEditItem?: (item: Item) => void;
+  onDeleteItem?: (itemId: string) => void;
 }
 
 export function ItemsTable({ 
   items = [], 
   onCreateItem, 
-  onImportLibrary 
+  onImportLibrary,
+  onEditItem,
+  onDeleteItem
 }: ItemsTableProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -150,9 +155,15 @@ export function ItemsTable({
                 </TableCell>
                 <TableCell align="right" className="font-medium">{item.price}</TableCell>
                 <TableCell align="center">
-                  <button className="p-1 hover:bg-gray-100 rounded">
-                    <MoreHorizontal className="h-4 w-4 text-gray-400" />
-                  </button>
+                  <DropdownMenu
+                    trigger={
+                      <div className="p-1 hover:bg-gray-100 rounded">
+                        <MoreHorizontal className="h-4 w-4 text-gray-400" />
+                      </div>
+                    }
+                    onEdit={() => onEditItem?.(item)}
+                    onDelete={() => onDeleteItem?.(item.id)}
+                  />
                 </TableCell>
               </TableRow>
             ))}
