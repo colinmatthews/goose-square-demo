@@ -11,29 +11,30 @@ A comprehensive business application built with React + Vite + TypeScript, featu
 - Download and install the **LTS version**
 - Verify: `node --version` and `npm --version`
 
-#### 2. Install GitHub Desktop
-- Visit [desktop.github.com](https://desktop.github.com/)
-- Download and install for your OS
-- Sign in with your GitHub account
-
-#### 3. Install Goose AI Assistant
-- **Direct Download**: Visit [Goose Releases](https://block.github.io/goose/) and download for your OS
-- **Or via pip**: `pip install goose-ai`
-- **Or via Homebrew**: `brew install goose-ai`
-- Verify: `goose --version`
+#### 2. Install Goose AI Assistant
+- **Goose should already be installed** via Square's managed software center
+- If not available, visit [Goose Releases](https://github.com/squareup/goose-releases/releases) (requires Square GitHub access)
+- Open the Goose UI application once installed
 
 ### Project Setup
 
-1. **Clone the repository using GitHub Desktop:**
-   - Click "Use Template" and create your own repo
-   - Click "Code" --> "Open in Github desktop"
-   - Download to a local folder
-   - Open the same directory in Goose
-   - Ask Goose to run setup steps
-
-2. **Install dependencies and run:**
+1. **Get the code:**
+   - Visit this repository on GitHub
+   - Click the green **"Use this template"** button
+   - Create your own repository
+   - Clone it to your local machine:
    ```bash
-   cd goose-square-demo
+   git clone https://github.com/YOUR-USERNAME/YOUR-REPO-NAME.git
+   cd YOUR-REPO-NAME
+   ```
+
+2. **Configure Goose:**
+   - Open the Goose UI application
+   - Click on **Settings** or **Working Directory**
+   - Change the working directory to your cloned project folder (e.g., `/Users/yourname/projects/YOUR-REPO-NAME`)
+
+3. **Install dependencies and run:**
+   ```bash
    npm install
    npm run dev
    ```
@@ -42,12 +43,11 @@ Application runs at `http://localhost:5173`
 
 ## 🤖 Working with Goose
 
-This project is optimized for Goose development:
+This project is optimized for Goose development. Once you've set your working directory in the Goose UI:
 
-```bash
-cd goose-square-demo
-goose session start
-```
+1. Open the Goose UI application
+2. Make sure the working directory is set to your project folder
+3. Start chatting with Goose about your development tasks
 
 Goose automatically reads:
 - `.goosehints` - Development guidelines
@@ -104,9 +104,9 @@ rm -rf node_modules package-lock.json && npm install
 ```
 
 **Goose issues:**
-```bash
-goose session end && goose session start
-```
+- Make sure the Goose UI app is running
+- Verify the working directory is set correctly in Goose settings
+- Try restarting the Goose application if it becomes unresponsive
 
 ## 📚 Resources
 
